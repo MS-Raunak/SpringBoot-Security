@@ -17,10 +17,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class MySecurityConfig{
     //basic configuration
-    @Bean
+    /*@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        /*//this configuration occurs with WebSecurityConfigurorAdaptor which was used in older version now its delete from spring security 6
+        *this configuration occurs with WebSecurityConfigurorAdaptor which was used in older version now its delete from spring security 6
         http
                 .authorizeRequests()
                 .anyRequest()
@@ -53,13 +53,41 @@ public class MySecurityConfig{
                 .build();
          */
         //Same like above but controller specific configuration is happening
-        return http.authorizeHttpRequests(request -> request
+        /* BASIC CONFIGURATION
+            return http.authorizeHttpRequests(request -> request
+
                         .requestMatchers("/home/**") ///home/** means request starting with /home
                         .hasRole("USER")//USER AND ADMIN BOTH CAN ACCESS /home/** request
                         .anyRequest()
                         .authenticated())
                         .httpBasic(Customizer.withDefaults())
                         .build();
+
+         */
+        //Form Based Configuration(Defualt form Made by S boot): Mainly Used in Web app
+        /* return http.authorizeHttpRequests(request -> request
+                        .requestMatchers("/home/**") ///home/** means request starting with /home
+                        .hasRole("USER")//USER AND ADMIN BOTH CAN ACCESS /home/** request
+                        .anyRequest()
+                        .authenticated())
+                .formLogin(Customizer.withDefaults()) //Default form
+                .build();
+
+
+
+    }
+    */
+    //Form-Based Config(Custom Form Validation)
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http.authorizeHttpRequests(request -> request
+                        .requestMatchers("/")
+                        .permitAll()
+                        .anyRequest().authenticated())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .permitAll()
+                ).build();
     }
 
     //Role based configuration
